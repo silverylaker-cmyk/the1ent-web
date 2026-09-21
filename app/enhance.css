@@ -1040,6 +1040,22 @@ section.hours {
 .subhero.sage .subhero-orb.b {
   background: var(--sky);
 }
+.subhero-art {
+  position: absolute;
+  z-index: -1;
+  right: 0;
+  top: 0;
+  width: min(52%, 720px);
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.85;
+  mask-image: linear-gradient(90deg, transparent, #000 45%), linear-gradient(0deg, transparent, #000 35%);
+  mask-composite: intersect;
+  -webkit-mask-composite: source-in;
+}
+.subhero > .subhero-art {
+  max-width: none;
+}
 .subhero h1 {
   font-size: clamp(32px, 4.4vw, 56px);
   letter-spacing: -0.02em;
@@ -1911,6 +1927,10 @@ footer a:hover {
   }
   .toc {
     display: none;
+  }
+  .subhero-art {
+    width: 100%;
+    opacity: 0.4;
   }
   .sub-body {
     padding-top: 28px;

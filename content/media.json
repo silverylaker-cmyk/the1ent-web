@@ -1,5 +1,15 @@
 {
-  "hero": { "poster": "/media/hero.jpg", "video": null },
-  "band": { "image": "/media/ribbon.jpg", "video": null },
-  "care": { "nose": null, "ear": null, "sleep": null }
+  "hero": {
+    "poster": "/media/hero.jpg",
+    "video": null
+  },
+  "band": {
+    "image": "/media/ribbon.jpg",
+    "video": null
+  },
+  "care": {
+    "nose": "/media/care-nose.jpg",
+    "ear": "/media/care-ear.jpg",
+    "sleep": "/media/care-sleep.jpg"
+  }
 }

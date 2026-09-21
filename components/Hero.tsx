@@ -43,7 +43,7 @@ export default function Hero({
 }: {
   content: HeroContent;
   kakaoUrl: string;
-  media: { poster: string; video: string | null };
+  media: { poster: string; video: string | null; videoMobile?: string | null };
   schedule: Schedule;
   statusLabels: Record<string, string>;
 }) {
@@ -61,7 +61,10 @@ export default function Hero({
     <section className="hero" ref={ref}>
       <motion.div className="hero-bg" aria-hidden style={reduce ? undefined : { y: bgY, scale: bgScale }}>
         {media.video && !reduce ? (
-          <video src={media.video} poster={media.poster} autoPlay muted loop playsInline preload="metadata" />
+          <video poster={media.poster} autoPlay muted loop playsInline preload="metadata">
+            {media.videoMobile && <source src={media.videoMobile} media="(max-width: 900px)" type="video/mp4" />}
+            <source src={media.video} type="video/mp4" />
+          </video>
         ) : (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={media.poster} alt="" className="kenburns" fetchPriority="high" />

@@ -6,7 +6,8 @@ import SubpageCta from '@/components/SubpageCta';
 import Toc from '@/components/features/Toc';
 import { IconArrow } from '@/components/icons';
 import { splitSections, sectionId } from '@/lib/markdown';
-import { getAllSurgeryContent, getUi, type CareContent, type SiteConfig } from '@/lib/content';
+import { withBase } from '@/lib/base';
+import { getAllSurgeryContent, getUi, getMedia, type CareContent, type CareSlug, type SiteConfig } from '@/lib/content';
 
 const RELATED: Record<string, string[]> = {
   nose: ['ess', 'septoplasty'],
@@ -17,11 +18,12 @@ const RELATED: Record<string, string[]> = {
 export default function CarePage({ care, site }: { care: CareContent; site: SiteConfig }) {
   const sections = splitSections(care.body);
   const ui = getUi();
+  const art = getMedia().care[care.slug as CareSlug];
   const related = getAllSurgeryContent().filter((s) => RELATED[care.slug]?.includes(s.slug));
 
   return (
     <>
-      <SubHero title={care.title} lead={care.lead} color={care.color} crumb="진료">
+      <SubHero title={care.title} lead={care.lead} color={care.color} crumb="진료" art={art ? withBase(art) : undefined}>
         <ul className="tags">
           {care.tags.map((tag, i) => (
             <Reveal as="li" index={i + 4} staggerMs={50} key={tag}>

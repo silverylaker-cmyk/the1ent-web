@@ -41,6 +41,7 @@ export default function HomePage() {
         media={{
           poster: withBase(media.hero.poster),
           video: media.hero.video ? withBase(media.hero.video) : null,
+          videoMobile: media.hero.videoMobile ? withBase(media.hero.videoMobile) : null,
         }}
         schedule={site.schedule}
         statusLabels={ui.status}

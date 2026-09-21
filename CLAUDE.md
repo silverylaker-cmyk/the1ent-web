@@ -1,8 +1,8 @@
 # 더원이비인후과 반월당점 홈페이지 리뉴얼
 
 ## 목표
-기존 the1ent.com(CMS, 서브페이지 40개)을 정적 사이트로 리뉴얼. 홈 + 서브 12페이지.
-디자인·모션 기준은 `design/prototype/the1ent-home-prototype.html` — 이 파일의 토큰·레이아웃·모션을 그대로 컴포넌트화한다. 새 디자인을 만들지 말 것.
+기존 the1ent.com(CMS, 서브페이지 40개)을 정적 사이트로 리뉴얼. 홈 + 서브페이지 + 자가체크 도구.
+출발점은 `design/prototype/the1ent-home-prototype.html`(토큰·사이드바 레이아웃). **2026-09 2차 리뉴얼부터 방향이 바뀌었다: 프로토타입을 그대로 옮기는 것이 아니라, 같은 토큰 위에서 모션이 풍부한 디자인과 서버 없는 신규 기능을 적극적으로 더한다.**
 
 ## 스택
 - Next.js 15 (App Router) + Tailwind v4 + Framer Motion
@@ -28,7 +28,10 @@ sidebar 64px → hover 220px / ease cubic-bezier(.22,1,.36,1)
 
 ## 페이지 (URL 고정)
 ```
-/                        홈 (프로토타입 그대로)
+/                        홈
+/check                   증상 자가체크 (진료 3축으로 연결)
+/check/sleep             수면무호흡 위험도 체크 (STOP-BANG)
+/faq                     자주 묻는 질문 (검색·분류, FAQPage JSON-LD)
 /care/nose               코 — 비염·축농증·비중격·비수술 치료
 /care/ear                귀 — 이명·어지럼·중이염
 /care/sleep              수면 — 코골이·수면무호흡·양압기
@@ -54,24 +57,38 @@ content/care/*.md        진료 3축 본문
 content/surgery/*.md     수술·검사 4개 본문 (frontmatter: steps[])
 content/notices/*.md     공지 (frontmatter: date, title)
 content/fees.json        비급여 표
+content/home.json        홈 섹션 카피 (hero·marquee·facts·journey·know·tools…)
+content/ui.json          공통 UI 문구 (진료 상태, 검색, 글자 크기, 예약 도우미…)
+content/check.json       증상 자가체크 문항
+content/stopbang.json    STOP-BANG 문항·판정 구간
+content/faq.json         FAQ
+content/media.json       Grok 생성 에셋 경로 (영상은 public/media에 파일만 넣으면 자동 활성, public/media/README.md)
 ```
+정적 파일 경로는 반드시 `lib/base.ts`의 `withBase()`를 거친다(GitHub Pages basePath).
 플레이스홀더로 시작하고 값이 오면 교체:
 - 카카오 채널 URL: `https://pf.kakao.com/CHANNEL_ID/chat`
 - 2번째 원장 이름·약력, 목요일 진료시간, 의료진 사진, 로고 hex
 
-## 모션 규칙 (프로토타입과 동일)
-- 히어로: 1회 오케스트레이션 — SVG 라인 드로잉 코→귀→수면파형(각 900ms, 700ms 간격) → 파스텔 원 scale-in → 라벨 fade. 그 뒤 헤드라인 2줄 stagger 140ms
-- 배경 블롭 2개 drift 22s/26s alternate
-- 스크롤 리빌: IntersectionObserver threshold .18, fade-up 16px, 700ms, 그룹 내 stagger 80ms
-- 수술 타임라인: 뷰 진입 시 점 3개 순차 채움(250ms 간격)
-- 진료 카드 hover: 배경 크림→해당 파스텔 300ms
-- `prefers-reduced-motion`이면 전부 즉시 표시
-- 이 외 모션 추가 금지
+## 모션 (framer-motion으로 통일)
+모션은 많이, 그러나 한 가지 언어로. 이징은 `components/motion/ease.ts`의 EASE, 프리미티브는 `components/motion/*`만 쓴다.
+- 히어로: 배경 미디어 패럴랙스 + Ken Burns(영상 있으면 영상), 헤드라인 단어 마스크 리빌(SplitText), SVG 라인 드로잉 코→귀→수면, 자석 버튼(Magnetic), 스크롤 큐
+- 섹션: Reveal(fade-up+blur), h2는 SplitText, 마키, 숫자 카운트업, 3D 틸트 카드, 스크롤 연동 방문 흐름(Journey), 패럴랙스 밴드
+- 전역: 스크롤 진행 바, 커서 글로우(데스크톱), 페이지 전환 커튼(CSS), 사이드바 활성 pill(layoutId)
+- 히어로의 스크롤 연동 값은 `useScroll()`의 창 scrollY(px)만 쓴다. target 측정 기반 progress에 opacity를 묶지 말 것(본문이 투명해지는 버그가 있었음)
+- framer-motion은 SVG의 opacity/pathLength를 *속성*으로 넣는다 → CSS에서 같은 속성의 초기값을 주면 덮인다
+- `prefers-reduced-motion`: MotionConfig reducedMotion="user" + CSS 애니메이션 전부 off. 새 CSS 애니메이션을 추가하면 enhance.css 맨 아래 목록에도 추가
+- 모바일은 데스크톱보다 가볍게(커서 글로우·틸트·자석 효과 없음)
+
+## 기능 (전부 서버 없이 동작)
+실시간 진료 상태 배지(lib/hours.ts, 한국시간) · Cmd+K 검색 · 글자 크기 3단계 · 증상 자가체크 · STOP-BANG · 예약 메시지 만들기(클립보드) · 비급여/FAQ 검색·필터 · 서브페이지 목차 · 주소 복사/지도 링크
+- 증상 등 건강 관련 입력은 URL에 싣지 않는다 → `lib/prefill.ts`(sessionStorage)
+- 자가체크류에는 "진단이 아닌 참고용" 고지를 반드시 둔다
 
 ## 하지 말 것
 - 카카오 노란색 사용 금지(라인 아이콘만)
-- 카드마다 그림자, 그라디언트 장식, 숫자 카운트업, all-caps 라벨 금지
 - 기존 사이트의 커뮤니티·상담게시판·후기 페이지 재현 금지
+- 의료광고 오인 소지: 가짜 의료진·환자 사진, 실제 병원처럼 보이는 AI 실내 사진, 전후 사진, 근거 없는 수치 금지. AI 에셋은 추상·일러스트만. facts 숫자는 content에서 확인 가능한 사실만
+- all-caps 라벨, 다크모드
 
 ## 품질 기준
 - Lighthouse 모바일 성능·접근성 90+

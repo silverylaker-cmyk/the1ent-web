@@ -133,11 +133,20 @@ function readJson<T>(name: string): T {
 type Json = any;
 export const getHomeContent = (): Json => readJson('home.json');
 export type MediaConfig = {
-  hero: { poster: string; video: string | null };
+  hero: { poster: string; video: string | null; videoMobile?: string | null };
   band: { image: string; video: string | null };
   care: Record<CareSlug, string | null>;
 };
-export const getMedia = (): MediaConfig => readJson('media.json');
+
+/** media.json의 video가 null이어도 public/media에 약속된 파일명이 있으면 자동으로 켠다 */
+export function getMedia(): MediaConfig {
+  const m = readJson<MediaConfig>('media.json');
+  const has = (rel: string) => fs.existsSync(path.join(process.cwd(), 'public', rel));
+  if (!m.hero.video && has('/media/hero.mp4')) m.hero.video = '/media/hero.mp4';
+  if (!m.hero.videoMobile && has('/media/hero-mobile.mp4')) m.hero.videoMobile = '/media/hero-mobile.mp4';
+  if (!m.band.video && has('/media/band.mp4')) m.band.video = '/media/band.mp4';
+  return m;
+}
 export const getUi = (): Json => readJson('ui.json');
 export const getCheck = (): Json => readJson('check.json');
 export const getStopBang = (): Json => readJson('stopbang.json');

@@ -7,18 +7,25 @@ export default function SubHero({
   lead,
   color,
   crumb,
+  art,
   children,
 }: {
   title: string;
   lead?: string;
   color?: 'sage' | 'sky';
   crumb?: string;
+  /** 우측에 깔리는 장식 이미지(이미 basePath가 붙은 경로) */
+  art?: string;
   children?: ReactNode;
 }) {
   return (
     <section className={`subhero ${color ?? ''}`}>
       <div className="subhero-orb a" aria-hidden />
       <div className="subhero-orb b" aria-hidden />
+      {art && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img className="subhero-art kenburns" src={art} alt="" />
+      )}
       {crumb && (
         <Reveal as="p" className="crumb">
           {crumb}
