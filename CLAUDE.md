@@ -7,7 +7,7 @@
 ## 스택
 - Next.js 15 (App Router) + Tailwind v4 + Framer Motion
 - `output: 'export'` 정적 빌드 → `out/`
-- 폰트: Noto Serif KR(헤드라인), Pretendard Variable(본문). 셀프호스팅(`public/fonts`)
+- 폰트: Noto Serif KR(헤드라인), Pretendard Variable(본문). 셀프호스팅(`public/fonts`). 원본(2.4MB)은 `design/fonts-full/`에 두고 `python scripts/subset-fonts.py`로 core(사이트에 실제 쓰인 글자, 글꼴당 ~90KB) + rest(KS X 1001 나머지) 두 조각과 `app/fonts.css`(unicode-range)를 만든다. 콘텐츠를 크게 바꾸면 다시 실행. fonts.css는 생성물이므로 직접 고치지 않는다
 - 이미지: `next/image` unoptimized. 아이콘은 인라인 SVG 컴포넌트
 - 패키지 매니저 pnpm
 
@@ -74,8 +74,9 @@ content/media.json       Grok 생성 에셋 경로 (영상은 public/media에 �
 - 히어로: 배경 미디어 패럴랙스 + Ken Burns(영상 있으면 영상), 헤드라인 단어 마스크 리빌(SplitText), SVG 라인 드로잉 코→귀→수면, 자석 버튼(Magnetic), 스크롤 큐
 - 섹션: Reveal(fade-up+blur), h2는 SplitText, 마키, 숫자 카운트업, 3D 틸트 카드, 스크롤 연동 방문 흐름(Journey), 패럴랙스 밴드
 - 전역: 스크롤 진행 바, 커서 글로우(데스크톱), 페이지 전환 커튼(CSS), 사이드바 활성 pill(layoutId)
-- 히어로의 스크롤 연동 값은 `useScroll()`의 창 scrollY(px)만 쓴다. target 측정 기반 progress에 opacity를 묶지 말 것(본문이 투명해지는 버그가 있었음)
+- 히어로의 스크롤 연동 값은 `useScroll()`의 창 scrollY(px)만 쓴다. target 측정 기반 progress에 본문 opacity를 묶지 말 것 — 측정이 어긋나 본문이 투명해진 버그가 있었고, 흐린 글자는 명암비 기준(4.5:1)도 깨뜨린다. Journey처럼 점·색·이동으로 상태를 표현한다
 - framer-motion은 SVG의 opacity/pathLength를 *속성*으로 넣는다 → CSS에서 같은 속성의 초기값을 주면 덮인다
+- 첫 화면(히어로·서브히어로·첫 섹션) 텍스트는 framer가 아니라 CSS 애니메이션(`.rise`, SplitText `onView={false}`)으로 넣는다 — JS 하이드레이션 전에는 `initial` opacity 0인 요소가 보이지 않아 LCP가 1초 이상 밀린다. 가장 큰 글은 투명도 없이 이동만.
 - `prefers-reduced-motion`: MotionConfig reducedMotion="user" + CSS 애니메이션 전부 off. 새 CSS 애니메이션을 추가하면 enhance.css 맨 아래 목록에도 추가
 - 모바일은 데스크톱보다 가볍게(커서 글로우·틸트·자석 효과 없음)
 
@@ -91,7 +92,8 @@ content/media.json       Grok 생성 에셋 경로 (영상은 public/media에 �
 - all-caps 라벨, 다크모드
 
 ## 품질 기준
-- Lighthouse 모바일 성능·접근성 90+
+- Lighthouse 모바일 성능·접근성 90+ (2026-09-22 로컬 gzip 서버 측정: 접근성 전 페이지 100 · 성능 서브페이지 87–92, 홈 82–83으로 홈은 목표 미달. 실행마다 ±3 정도 흔들린다. 홈의 남은 비용은 모션 컴포넌트 하이드레이션 TBT와 히어로 이미지)
+- 글자색으로 `--sky-deep`/`--sage-deep`를 쓰지 말 것(명암비 3.4:1). 글자는 `--sky-ink`/`--sage-ink`
 - 키보드 포커스 링 보임, 사이드바 Tab 순회 가능
 - 375px / 768px / 1440px 스크린샷 확인
 

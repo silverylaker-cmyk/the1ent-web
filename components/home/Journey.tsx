@@ -8,13 +8,18 @@ type Step = { title: string; body: string };
 function JourneyStep({ step, i, total, progress }: { step: Step; i: number; total: number; progress: MotionValue<number> }) {
   const start = i / total;
   const active = useTransform(progress, [start - 0.08, start + 0.04], [0, 1]);
-  const opacity = useTransform(active, [0, 1], [0.35, 1]);
-  const x = useTransform(active, [0, 1], [18, 0]);
-  const dotScale = useTransform(active, [0, 1], [0.5, 1]);
+  // 글자는 항상 또렷하게 둔다(대비 기준). 비활성 상태는 점·번호 색·가로 이동으로만 표현한다.
+  const x = useTransform(active, [0, 1], [22, 0]);
+  const dotScale = useTransform(active, [0, 1], [0.45, 1]);
+  const numColor = useTransform(active, [0, 1], ['#5c5a57', '#245a75']);
+  const barScale = useTransform(active, [0, 1], [0, 1]);
   return (
-    <motion.li style={{ opacity, x }}>
+    <motion.li style={{ x }}>
       <motion.i aria-hidden style={{ scale: dotScale, opacity: active }} />
-      <span className="num">{String(i + 1).padStart(2, '0')}</span>
+      <motion.span className="num" style={{ color: numColor }}>
+        {String(i + 1).padStart(2, '0')}
+        <motion.b aria-hidden style={{ scaleX: barScale }} />
+      </motion.span>
       <h3>{step.title}</h3>
       <p>{step.body}</p>
     </motion.li>

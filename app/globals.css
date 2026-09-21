@@ -1,19 +1,6 @@
 @import 'tailwindcss';
 
-@font-face {
-  font-family: 'Pretendard Variable';
-  font-weight: 400 600;
-  font-style: normal;
-  font-display: swap;
-  src: url('../public/fonts/PretendardVariable.woff2') format('woff2-variations');
-}
-@font-face {
-  font-family: 'Noto Serif KR';
-  font-weight: 400 600;
-  font-style: normal;
-  font-display: swap;
-  src: url('../public/fonts/NotoSerifKR-500.woff2') format('woff2');
-}
+/* @font-face 선언은 scripts/subset-fonts.py 가 만드는 app/fonts.css 에 있다 (layout.tsx에서 import) */
 
 :root {
   --cream: #f7f6f2;

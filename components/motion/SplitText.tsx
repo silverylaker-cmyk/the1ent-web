@@ -1,9 +1,14 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import type { CSSProperties } from 'react';
 import { EASE } from './ease';
 
-/** 단어 단위 마스크 리빌. 스크린리더에는 원문 그대로 읽힌다. */
+/**
+ * 단어 단위 마스크 리빌. 스크린리더에는 숨긴 원문(sr-only)이 읽히고, 애니메이션 조각은 aria-hidden.
+ * - onView(기본): 스크롤로 들어올 때 framer-motion으로 재생
+ * - onView={false}: 첫 화면용. CSS 애니메이션이라 JS 하이드레이션을 기다리지 않고 바로 시작한다(LCP 보호)
+ */
 export default function SplitText({
   text,
   as = 'h2',
@@ -17,19 +22,36 @@ export default function SplitText({
   delay?: number;
   onView?: boolean;
 }) {
-  const Tag = motion[as] as typeof motion.h2;
   const words = text.split(' ');
-  const trigger = onView
-    ? { whileInView: 'in', viewport: { once: true, amount: 0.6 } }
-    : { animate: 'in' };
+  const gap = (i: number) => (i < words.length - 1 ? '\u00A0' : '');
+
+  if (!onView) {
+    const Tag = as;
+    return (
+      <Tag className={`split ${className ?? ''}`}>
+        <span className="sr-only">{text}</span>
+        {words.map((w, i) => (
+          <span className="split-mask" aria-hidden key={i}>
+            <span className="split-word split-css" style={{ '--d': `${delay + i * 0.06}s` } as CSSProperties}>
+              {w}
+            </span>
+            {gap(i)}
+          </span>
+        ))}
+      </Tag>
+    );
+  }
+
+  const MotionTag = motion[as] as typeof motion.h2;
   return (
-    <Tag
+    <MotionTag
       className={`split ${className ?? ''}`}
-      aria-label={text}
       initial="out"
-      {...trigger}
+      whileInView="in"
+      viewport={{ once: true, amount: 0.6 }}
       transition={{ staggerChildren: 0.06, delayChildren: delay }}
     >
+      <span className="sr-only">{text}</span>
       {words.map((w, i) => (
         <span className="split-mask" aria-hidden key={i}>
           <motion.span
@@ -39,9 +61,9 @@ export default function SplitText({
           >
             {w}
           </motion.span>
-          {i < words.length - 1 ? ' ' : ''}
+          {gap(i)}
         </span>
       ))}
-    </Tag>
+    </MotionTag>
   );
 }

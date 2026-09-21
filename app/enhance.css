@@ -5,8 +5,9 @@
 :root {
   --fs: 1;
   --shadow-soft: 0 24px 60px -28px rgba(31, 30, 29, 0.28);
-  --sage-ink: #3f7350;
-  --sky-ink: #2f6d8c;
+  /* 파스텔 오브 위에서도 4.5:1을 넘도록 여유를 둔 글자색 */
+  --sage-ink: #33623f;
+  --sky-ink: #245a75;
 }
 main,
 footer {
@@ -82,7 +83,7 @@ footer,
   }
 }
 .page-enter {
-  animation: page-enter 0.8s var(--ease) 0.12s backwards;
+  animation: page-enter 0.5s var(--ease) backwards;
 }
 @keyframes page-enter {
   from {
@@ -91,8 +92,17 @@ footer,
   }
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 .split {
   display: block;
+  position: relative;
 }
 .split-mask {
   display: inline-block;
@@ -104,7 +114,34 @@ footer,
 .split-word {
   display: inline-block;
   transform-origin: 0 100%;
-  will-change: transform;
+}
+/* 첫 화면 텍스트용 CSS 진입 애니메이션 — JS 하이드레이션을 기다리지 않는다.
+   가장 큰 글(리드 문단·제목)은 투명도 없이 이동만 한다: 첫 프레임부터 실제로 읽을 수 있어야 LCP 수치도 정직하다.
+   작은 요소(.rise.fade)만 페이드를 함께 쓴다. */
+.split-css {
+  animation: word-rise 0.9s var(--ease) var(--d, 0s) backwards;
+}
+@keyframes word-rise {
+  from {
+    transform: translateY(110%) rotate(4deg);
+  }
+}
+.rise {
+  animation: rise 0.8s var(--ease) var(--d, 0s) backwards;
+}
+@keyframes rise {
+  from {
+    transform: translateY(16px);
+  }
+}
+.rise.fade {
+  animation-name: rise-fade;
+}
+@keyframes rise-fade {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
 }
 .magnetic {
   display: inline-block;
@@ -308,6 +345,10 @@ a:hover .tool-go .i-arrow {
   inset: -4% 0;
   z-index: -2;
 }
+.hero-bg video {
+  position: absolute;
+  inset: 0;
+}
 .hero-bg img,
 .hero-bg video {
   width: 100%;
@@ -350,6 +391,10 @@ a:hover .tool-go .i-arrow {
 }
 .hero-copy p {
   word-break: keep-all;
+}
+.hero .hero-copy p,
+.hero .hero-copy .cta {
+  opacity: 1;
 }
 .eyebrow {
   display: flex;
@@ -748,9 +793,17 @@ section.hours {
   box-shadow: 0 0 0 6px var(--sky-soft);
 }
 .journey .num {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   font-size: 13px;
-  color: var(--sky-ink);
   font-variant-numeric: tabular-nums;
+}
+.journey .num b {
+  width: 36px;
+  height: 2px;
+  background: var(--sky-deep);
+  transform-origin: 0 50%;
 }
 .journey h3 {
   font-size: 24px;
@@ -866,6 +919,10 @@ section.hours {
 }
 
 /* ---------- doctors ---------- */
+/* --sky-deep는 장식용 토큰(3.4:1)이라 글자에는 --sky-ink를 쓴다 */
+.doc .role {
+  color: var(--sky-ink);
+}
 .doc .photo {
   position: relative;
   overflow: hidden;
@@ -1345,6 +1402,14 @@ textarea:focus {
 }
 .table-scroll {
   overflow-x: auto;
+}
+.fees-table {
+  min-width: 520px;
+}
+.fees-table th:first-child,
+.fees-table td:first-child,
+.fees-table td:nth-child(3) {
+  white-space: nowrap;
 }
 .fees-table tbody tr {
   transition: background 0.25s;
@@ -1986,7 +2051,9 @@ footer a:hover {
   .cursor-glow {
     display: none;
   }
-  .page-enter {
+  .page-enter,
+  .rise,
+  .split-css {
     animation: none;
   }
   .marquee-track {

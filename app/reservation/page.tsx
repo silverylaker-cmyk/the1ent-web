@@ -15,9 +15,8 @@ export default function Page() {
     <>
       <SubHero title="예약" lead="모든 예약은 카카오톡 채널을 통해 접수합니다. 전화 문의도 가능합니다." color="sky" />
       <section style={{ paddingTop: 0 }}>
-        <Reveal as="div">
-          <ReservationHelper t={ui.helper} kakaoUrl={site.kakaoChannelUrl} />
-        </Reveal>
+        {/* 첫 화면 콘텐츠라 JS에 묶인 Reveal 없이 둔다 — 페이지 진입 애니메이션(page-enter)이 이미 걸려 있다 */}
+        <ReservationHelper t={ui.helper} kakaoUrl={site.kakaoChannelUrl} />
       </section>
       <section className="hours">
         <Reveal as="div">

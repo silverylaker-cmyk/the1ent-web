@@ -1,6 +1,5 @@
 import SplitText from './motion/SplitText';
-import Reveal from './Reveal';
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
 export default function SubHero({
   title,
@@ -27,15 +26,13 @@ export default function SubHero({
         <img className="subhero-art kenburns" src={art} alt="" />
       )}
       {crumb && (
-        <Reveal as="p" className="crumb">
-          {crumb}
-        </Reveal>
+        <p className="crumb rise fade">{crumb}</p>
       )}
-      <SplitText as="h1" text={title} onView={false} delay={0.2} />
+      <SplitText as="h1" text={title} onView={false} delay={0.05} />
       {lead && (
-        <Reveal as="p" className="lead" index={3}>
+        <p className="lead rise" style={{ '--d': '0.2s' } as CSSProperties}>
           {lead}
-        </Reveal>
+        </p>
       )}
       {children}
     </section>

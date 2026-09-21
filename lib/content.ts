@@ -117,7 +117,8 @@ export function getNotices(): Notice[] {
     const { data, content } = matter(raw);
     return {
       slug: filename.replace(/\.md$/, ''),
-      date: String(data.date ?? ''),
+      // YAML의 날짜는 gray-matter가 Date로 파싱하므로 YYYY-MM-DD로 되돌린다
+      date: data.date instanceof Date ? data.date.toISOString().slice(0, 10) : String(data.date ?? ''),
       title: data.title ?? filename,
       body: content.trim(),
     };

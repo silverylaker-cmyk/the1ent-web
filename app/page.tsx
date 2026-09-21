@@ -50,10 +50,10 @@ export default function HomePage() {
       <Marquee items={home.marquee} />
 
       <section className="facts" aria-label="한눈에 보기">
-        {home.facts.map((f: { value: number; suffix: string; label: string }, i: number) => (
+        {home.facts.map((f: { value: number; suffix: string; label: string; static?: boolean }, i: number) => (
           <Reveal as="div" className="fact" index={i} key={f.label}>
             <div className="fact-num">
-              <CountUp value={f.value} />
+              {f.static ? f.value : <CountUp value={f.value} />}
               <small>{f.suffix}</small>
             </div>
             <p>{f.label}</p>

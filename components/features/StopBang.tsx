@@ -36,7 +36,7 @@ export default function StopBang({ data }: { data: any }) {
 
   return (
     <div className="quiz">
-      <div className="quiz-bar" role="progressbar" aria-valuemin={0} aria-valuemax={qs.length} aria-valuenow={Math.min(step, qs.length)}>
+      <div className="quiz-bar" role="progressbar" aria-label={data.progress} aria-valuemin={0} aria-valuemax={qs.length} aria-valuenow={Math.min(step, qs.length)}>
         <motion.span animate={{ scaleX: Math.min(step, qs.length) / qs.length }} transition={{ duration: 0.5, ease: EASE }} />
       </div>
       <div className="quiz-letters" aria-hidden>

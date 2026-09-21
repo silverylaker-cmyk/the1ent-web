@@ -8,6 +8,7 @@ import CommandPalette from '@/components/features/CommandPalette';
 import FontSize from '@/components/features/FontSize';
 import BackToTop from '@/components/features/BackToTop';
 import { getSiteConfig, getSearchIndex, getUi } from '@/lib/content';
+import './fonts.css';
 import './globals.css';
 import './enhance.css';
 
