@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>더원이비인후과 반월당점</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<style>
+:root{
+  --cream:#F7F6F2; --cream-2:#EFEDE7; --ink:#1F1E1D; --ink-2:#5C5A57; --line:#DCD9D1;
+  --sky:#BFDCEB; --sky-deep:#4A8CAD; --sky-soft:#E3EFF5;
+  --sage:#C9E0CF; --sage-deep:#5E9A72; --sage-soft:#E9F2EB;
+  --serif:'Noto Serif KR',serif; --sans:'Pretendard Variable',Pretendard,-apple-system,sans-serif;
+  --sb:64px; --sb-open:220px; --ease:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+h1,h2,h3{font-family:var(--serif);font-weight:500;letter-spacing:-.01em;line-height:1.3}
+h2{font-size:clamp(26px,3vw,36px);margin-bottom:14px}
+.lead{color:var(--ink-2);max-width:56ch;font-size:17px}
+button{font-family:inherit}
+:focus-visible{outline:2px solid var(--sky-deep);outline-offset:3px}
+
+/* ---------- sidebar ---------- */
+.sb{position:fixed;left:0;top:0;bottom:0;width:var(--sb);background:var(--cream);border-right:1px solid var(--line);display:flex;flex-direction:column;z-index:50;transition:width .35s var(--ease);overflow:hidden}
+.sb:hover,.sb.open{width:var(--sb-open)}
+.sb .logo{height:72px;display:flex;align-items:center;padding-left:20px;gap:12px;border-bottom:1px solid var(--line);white-space:nowrap}
+.sb .logo .mark{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--sky) 0 50%,var(--sage) 50% 100%);flex:none}
+.sb .logo span{font-family:var(--serif);font-size:15px;opacity:0;transform:translateX(-6px);transition:.3s var(--ease)}
+.sb:hover .logo span,.sb.open .logo span{opacity:1;transform:none}
+.sb nav{display:flex;flex-direction:column;padding:16px 0;gap:4px;flex:1}
+.sb nav a{display:flex;align-items:center;gap:14px;height:44px;padding-left:20px;color:var(--ink-2);white-space:nowrap;border-left:2px solid transparent;transition:.2s}
+.sb nav a svg{width:22px;height:22px;flex:none;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.sb nav a span{font-size:14px;opacity:0;transform:translateX(-6px);transition:.3s var(--ease)}
+.sb:hover nav a span,.sb.open nav a span{opacity:1;transform:none}
+.sb nav a:hover,.sb nav a.active{color:var(--ink);border-left-color:var(--sky-deep);background:var(--sky-soft)}
+.sb .kakao{margin:0 12px 20px;height:44px;border:1px solid var(--ink);border-radius:22px;display:flex;align-items:center;gap:10px;padding-left:9px;color:var(--ink);white-space:nowrap;transition:.2s}
+.sb .kakao:hover{background:var(--ink);color:var(--cream)}
+.sb .kakao svg{width:22px;height:22px;flex:none}
+.sb .kakao span{font-size:14px;opacity:0;transition:.3s var(--ease)}
+.sb:hover .kakao span,.sb.open .kakao span{opacity:1}
+
+/* ---------- layout ---------- */
+main{margin-left:var(--sb)}
+section{padding:96px clamp(24px,6vw,96px);max-width:1240px}
+.notice{margin-left:var(--sb);height:40px;display:flex;align-items:center;gap:12px;padding:0 clamp(24px,6vw,96px);border-bottom:1px solid var(--line);font-size:13px;color:var(--ink-2)}
+.notice b{font-weight:600;color:var(--sage-deep)}
+
+/* ---------- hero ---------- */
+.hero{min-height:calc(100vh - 40px);display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:48px;position:relative;overflow:hidden;padding-top:60px}
+.hero h1{font-size:clamp(34px,4.6vw,60px);font-weight:500;margin-bottom:22px}
+.hero h1 .l{display:block;opacity:0;transform:translateY(14px)}
+.hero p{font-size:18px;color:var(--ink-2);max-width:44ch;margin-bottom:34px;opacity:0}
+.hero .cta{display:flex;gap:12px;opacity:0}
+.btn{display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 22px;border-radius:24px;font-size:15px;font-weight:500;border:1px solid var(--ink);transition:.2s}
+.btn.dark{background:var(--ink);color:var(--cream)}
+.btn.dark:hover{background:#000}
+.btn.ghost:hover{background:var(--cream-2)}
+.blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.55;pointer-events:none;z-index:0}
+.blob.a{width:520px;height:520px;background:var(--sky);right:-120px;top:-80px;animation:drift 22s ease-in-out infinite alternate}
+.blob.b{width:420px;height:420px;background:var(--sage);right:180px;bottom:-140px;animation:drift 26s ease-in-out infinite alternate-reverse}
+@keyframes drift{to{transform:translate(-60px,50px) scale(1.08)}}
+.hero>*{position:relative;z-index:1}
+.symbols{width:100%;max-width:460px;justify-self:center}
+.symbols path,.symbols circle{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:var(--len,600);stroke-dashoffset:var(--len,600)}
+.symbols .fill{fill:var(--sky);stroke:none;opacity:0;transform-origin:center}
+.symbols .fill.g{fill:var(--sage)}
+.symbols text{font-family:var(--sans);font-size:12px;fill:var(--ink-2);opacity:0}
+
+/* ---------- axis cards ---------- */
+.axis{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px}
+.axis a{display:block;padding:32px 28px 28px;border:1px solid var(--line);border-radius:20px;background:var(--cream);min-height:300px;transition:background .3s var(--ease),transform .3s var(--ease)}
+.axis a:hover{transform:translateY(-3px)}
+.axis a.sage:hover{background:var(--sage)}
+.axis a.sky:hover{background:var(--sky)}
+.axis h3{font-size:24px;margin:18px 0 8px}
+.axis p{color:var(--ink-2);font-size:15px;margin-bottom:18px}
+.axis ul{list-style:none;display:flex;flex-wrap:wrap;gap:6px}
+.axis li{font-size:13px;border:1px solid var(--line);border-radius:12px;padding:3px 10px;background:rgba(255,255,255,.5)}
+.axis svg{width:40px;height:40px;stroke:var(--ink);fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- surgery ---------- */
+.surg{background:var(--cream-2)}
+.surg-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:40px}
+.surg-item{padding:28px;border:1px solid var(--line);border-radius:20px;background:var(--cream)}
+.surg-item h3{font-size:22px;margin-bottom:6px}
+.surg-item .sub{color:var(--ink-2);font-size:15px;margin-bottom:22px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;position:relative}
+.steps::before{content:"";position:absolute;left:8%;right:8%;top:9px;height:1px;background:var(--line)}
+.step{position:relative;text-align:center;padding-top:26px;font-size:13px;color:var(--ink-2)}
+.step::before{content:"";position:absolute;left:50%;top:4px;width:11px;height:11px;border-radius:50%;background:var(--cream);border:1.5px solid var(--ink-2);transform:translateX(-50%);transition:.4s var(--ease)}
+.step b{display:block;color:var(--ink);font-weight:500;font-size:14px}
+.surg-item.in .step::before{background:var(--sage-deep);border-color:var(--sage-deep)}
+.surg-item.in .step:nth-child(2)::before{transition-delay:.25s}
+.surg-item.in .step:nth-child(3)::before{transition-delay:.5s}
+.surg-item.sky.in .step::before{background:var(--sky-deep);border-color:var(--sky-deep)}
+.surg-item .more{display:inline-block;margin-top:20px;font-size:14px;border-bottom:1px solid var(--ink)}
+
+/* ---------- knowhow ---------- */
+.know{display:grid;grid-template-columns:repeat(3,1fr);gap:48px;margin-top:40px}
+.know h3{font-size:20px;margin-bottom:10px}
+.know p{color:var(--ink-2);font-size:15px}
+.know .bar{width:36px;height:3px;background:var(--sky);margin-bottom:20px}
+.know div:nth-child(2) .bar{background:var(--sage)}
+.know div:nth-child(3) .bar{background:var(--ink)}
+
+/* ---------- doctors ---------- */
+.docs{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:40px}
+.doc{display:grid;grid-template-columns:150px 1fr;gap:24px;align-items:start}
+.doc .photo{aspect-ratio:3/4;border-radius:16px;background:linear-gradient(160deg,var(--sky-soft),var(--sage-soft));border:1px solid var(--line);display:flex;align-items:end;padding:12px;font-size:12px;color:var(--ink-2)}
+.doc h3{font-size:22px}
+.doc .role{color:var(--sky-deep);font-size:14px;margin-bottom:12px}
+.doc ul{list-style:none;font-size:14px;color:var(--ink-2)}
+.doc li{padding:4px 0;border-bottom:1px solid var(--line)}
+
+/* ---------- hours ---------- */
+.hours{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;background:var(--cream-2)}
+.hours table{width:100%;border-collapse:collapse;font-size:15px;margin-top:20px}
+.hours td{padding:12px 0;border-bottom:1px solid var(--line)}
+.hours td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.hours .kbox{border:1px solid var(--line);border-radius:20px;padding:32px;background:var(--cream)}
+.hours .kbox h3{font-size:22px;margin-bottom:8px}
+.hours .kbox p{color:var(--ink-2);font-size:15px;margin-bottom:22px}
+.hours .tel{font-family:var(--serif);font-size:28px;margin-top:20px;display:block}
+
+/* ---------- map ---------- */
+.map{display:grid;grid-template-columns:1fr 1fr;gap:48px}
+.map .box{aspect-ratio:4/3;border-radius:20px;border:1px solid var(--line);background:var(--sky-soft);position:relative;overflow:hidden}
+.map .box::after{content:"지도 임베드 자리 (카카오맵)";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--ink-2)}
+.map dl{margin-top:24px;font-size:15px}
+.map dt{font-weight:500;margin-top:16px}
+.map dd{color:var(--ink-2)}
+
+/* ---------- footer ---------- */
+footer{margin-left:var(--sb);padding:40px clamp(24px,6vw,96px);border-top:1px solid var(--line);font-size:13px;color:var(--ink-2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
+footer a{border-bottom:1px solid var(--line)}
+
+/* ---------- reveal ---------- */
+.rv{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.rv.in{opacity:1;transform:none}
+
+/* ---------- floating kakao (mobile) ---------- */
+.fab{display:none;position:fixed;right:18px;bottom:78px;height:52px;padding:0 18px 0 14px;border-radius:26px;background:var(--ink);color:var(--cream);align-items:center;gap:8px;font-size:14px;font-weight:500;z-index:60;box-shadow:0 8px 24px rgba(31,30,29,.18);opacity:0;transform:translateY(12px);transition:.3s var(--ease)}
+.fab.show{opacity:1;transform:none}
+.fab svg{width:20px;height:20px}
+
+/* ---------- mobile ---------- */
+@media (max-width:900px){
+  :root{--sb:0px}
+  .sb{top:auto;bottom:0;width:100%!important;height:64px;flex-direction:row;border-right:0;border-top:1px solid var(--line);padding:0}
+  .sb .logo,.sb .kakao{display:none}
+  .sb nav{flex-direction:row;padding:0;gap:0;width:100%}
+  .sb nav a{flex:1;flex-direction:column;justify-content:center;gap:4px;height:64px;padding:0;border-left:0;border-top:2px solid transparent}
+  .sb nav a.active{border-top-color:var(--sky-deep);background:none}
+  .sb nav a span{opacity:1;transform:none;font-size:11px}
+  .sb nav a svg{width:20px;height:20px}
+  .fab{display:flex}
+  main,footer,.notice{margin-left:0}
+  body{padding-bottom:64px}
+  section{padding:64px 22px}
+  .hero{grid-template-columns:1fr;min-height:auto;padding-top:48px}
+  .symbols{max-width:320px;order:-1}
+  .axis,.surg-grid,.know,.docs,.hours,.map{grid-template-columns:1fr}
+  .doc{grid-template-columns:110px 1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  .rv,.hero h1 .l,.hero p,.hero .cta,.symbols text,.symbols .fill{opacity:1!important;transform:none!important;transition:none!important}
+  .symbols path,.symbols circle{stroke-dashoffset:0!important}
+  .blob{animation:none}
+}
+</style>
+</head>
+<body>
+
+<aside class="sb" id="sb">
+  <div class="logo"><div class="mark"></div><span>더원이비인후과 반월당점</span></div>
+  <nav>
+    <a href="#top" class="active"><svg viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v9H4z"/><path d="M10 20v-6h4v6"/></svg><span>홈</span></a>
+    <a href="#care"><svg viewBox="0 0 24 24"><path d="M12 3c-3 4-5 7-5 10a5 5 0 0 0 10 0c0-3-2-6-5-10z"/></svg><span>진료</span></a>
+    <a href="#surgery"><svg viewBox="0 0 24 24"><path d="M4 12h4l2-6 3 12 2-6h5"/></svg><span>수술·검사</span></a>
+    <a href="#doctors"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="16" cy="9" r="2.5"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6M14 15.5c2.6 0 5 1.8 5 4.5"/></svg><span>의료진</span></a>
+    <a href="#hours"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg><span>예약</span></a>
+    <a href="#map"><svg viewBox="0 0 24 24"><path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/></svg><span>오시는 길</span></a>
+  </nav>
+  <a class="kakao" href="https://pf.kakao.com/CHANNEL_ID/chat" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 4C7.6 4 4 6.9 4 10.4c0 2.2 1.4 4.1 3.6 5.2L7 19l3.6-2.3c.5.1.9.1 1.4.1 4.4 0 8-2.9 8-6.4S16.4 4 12 4z"/></svg>
+    <span>카카오톡 예약</span>
+  </a>
+</aside>
+
+<div class="notice" id="top"><b>공지</b> 추석 연휴 진료 안내는 예약 채널에서 확인하실 수 있습니다.</div>
+
+<main>
+
+<section class="hero">
+  <div class="blob a"></div><div class="blob b"></div>
+  <div>
+    <h1><span class="l">코, 귀, 그리고 잠.</span><span class="l">한 곳에서 끝까지 봅니다.</span></h1>
+    <p>반월당역 10번 출구. 앉은 자세로 시행하는 Jikei 방식 내시경 코 수술부터 이명·어지럼, 코골이·수면다원검사까지 두 명의 전문의가 진단과 수술, 수술 후 관리를 이어서 맡습니다.</p>
+    <div class="cta">
+      <a class="btn dark" href="https://pf.kakao.com/CHANNEL_ID/chat" target="_blank" rel="noopener">카카오톡으로 예약</a>
+      <a class="btn ghost" href="#surgery">수술 설명 보기</a>
+    </div>
+  </div>
+  <svg class="symbols" viewBox="0 0 460 360" aria-hidden="true">
+    <!-- nose (sage) -->
+    <circle class="fill g" cx="100" cy="150" r="70"/>
+    <path id="s1" d="M104 78c-4 36-22 70-40 92 2 14 20 24 36 20 12-4 16-12 12-22"/>
+    <path id="s2" d="M84 172c-8 4-14 10-12 18"/>
+    <text x="100" y="262" text-anchor="middle">코 · 비염 · 부비동 · ESS</text>
+    <!-- ear (sky) -->
+    <circle class="fill" cx="260" cy="150" r="70"/>
+    <path id="s3" d="M232 130c0-30 18-48 40-48s36 18 36 40c0 20-14 28-22 40-6 10-6 24-18 30-12 6-26-2-30-16"/>
+    <path id="s4" d="M248 128c0-14 8-24 22-24s22 10 22 24c0 12-10 16-14 24"/>
+    <text x="260" y="262" text-anchor="middle">귀 · 이명 · 어지럼 · 중이염</text>
+    <!-- sleep wave (sky+sage mix) -->
+    <circle class="fill" cx="180" cy="300" r="0"/>
+    <path id="s5" d="M40 322c20 0 20-28 40-28s20 28 40 28 20-28 40-28 20 28 40 28 20-28 40-28 20 28 40 28 20-28 40-28 20 28 40 28 20-28 40-28"/>
+    <text x="230" y="350" text-anchor="middle">수면 · 코골이 · 수면다원검사</text>
+  </svg>
+</section>
+
+<section id="care">
+  <h2 class="rv">세 가지 진료 축</h2>
+  <p class="lead rv">이비인후과 전체를 나열하지 않습니다. 반월당점이 가장 많이 보고, 가장 깊게 보는 세 영역입니다.</p>
+  <div class="axis">
+    <a href="#" class="sage rv">
+      <svg viewBox="0 0 24 24"><path d="M13 3c-2 6-6 10-9 14 1 3 5 4 8 3 3-1 4-3 3-5"/><path d="M8 19c-2 1-3 2-3 3"/></svg>
+      <h3>코</h3>
+      <p>알레르기 비염, 축농증, 비중격만곡증, 코막힘. 약물·면역치료로 시작해 필요할 때만 수술로 넘어갑니다.</p>
+      <ul><li>비염</li><li>축농증</li><li>비중격만곡증</li><li>비수술 치료</li><li>축농증 수술</li><li>비중격 수술</li></ul>
+    </a>
+    <a href="#" class="sky rv">
+      <svg viewBox="0 0 24 24"><path d="M7 11c0-4 2.5-7 6-7s6 3 6 6.5c0 3-2 4-3.5 6-1 1.5-1 3.5-3 4.5-2 1-4-.5-4.5-2.5"/></svg>
+      <h3>귀</h3>
+      <p>이명, 어지럼증, 중이염. 청력·전정 검사로 원인을 나눈 뒤 약물, 수액, 재활, 수술 중에서 고릅니다.</p>
+      <ul><li>이명</li><li>어지럼증</li><li>중이염</li><li>중이염 수술</li><li>어지럼 수액</li></ul>
+    </a>
+    <a href="#" class="sky rv">
+      <svg viewBox="0 0 24 24"><path d="M3 15c2 0 2-5 4-5s2 5 4 5 2-5 4-5 2 5 4 5 2-5 4-5"/></svg>
+      <h3>수면</h3>
+      <p>코골이와 수면무호흡. 수면다원검사로 정도를 수치화하고, 코·목·양압기 중 맞는 치료를 정합니다.</p>
+      <ul><li>코골이·수면무호흡</li><li>수면다원검사</li><li>코골이 수술</li><li>양압기</li></ul>
+    </a>
+  </div>
+</section>
+
+<section class="surg" id="surgery">
+  <h2 class="rv">수술과 검사, 결정 전에 미리 봅니다</h2>
+  <p class="lead rv">수술을 권유받은 분이 집에서 먼저 읽고 오시도록 만든 페이지입니다. 각 항목은 진단에서 회복까지 세 단계로 설명합니다.</p>
+  <div class="surg-grid">
+    <div class="surg-item rv">
+      <h3>축농증 내시경 수술 (ESS)</h3>
+      <p class="sub">Jikei 대학 시술법 — 환자가 앉은 상태로 시행하는 내시경 코 수술</p>
+      <div class="steps"><div class="step"><b>진단</b>CT·내시경</div><div class="step"><b>수술</b>당일 수술</div><div class="step"><b>회복</b>세척·외래 관리</div></div>
+      <a class="more" href="#">설명 영상과 동의 안내 보기</a>
+    </div>
+    <div class="surg-item rv">
+      <h3>내시경 비중격 수술</h3>
+      <p class="sub">휘어진 비중격을 내시경으로 교정 — 코막힘의 구조적 원인 해결</p>
+      <div class="steps"><div class="step"><b>진단</b>비강 내시경·CT</div><div class="step"><b>수술</b>절개 없는 비강 내 접근</div><div class="step"><b>회복</b>패킹 제거·외래</div></div>
+      <a class="more" href="#">설명 영상과 동의 안내 보기</a>
+    </div>
+    <div class="surg-item sky rv">
+      <h3>수면다원검사 (PSG)</h3>
+      <p class="sub">하룻밤 검사로 무호흡 지수(AHI)를 수치화</p>
+      <div class="steps"><div class="step"><b>상담</b>증상·병력 확인</div><div class="step"><b>검사</b>1박 측정</div><div class="step"><b>결과</b>AHI 기준 치료 결정</div></div>
+      <a class="more" href="#">검사 준비 안내 보기</a>
+    </div>
+    <div class="surg-item sky rv">
+      <h3>코골이 수술</h3>
+      <p class="sub">코·목 구조에 따라 맞춤 — PSG 결과가 있어야 결정합니다</p>
+      <div class="steps"><div class="step"><b>진단</b>PSG·내시경</div><div class="step"><b>수술</b>구조별 선택</div><div class="step"><b>회복</b>추적 검사</div></div>
+      <a class="more" href="#">설명 영상과 동의 안내 보기</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2 class="rv">더원이 다르게 하는 세 가지</h2>
+  <div class="know">
+    <div class="rv"><div class="bar"></div><h3>Jikei 대학 시술법</h3><p>내시경 코 수술의 시초가 된 방식입니다. 환자가 앉은 상태로 진행해 출혈이 적고 회복이 빠릅니다.</p></div>
+    <div class="rv"><div class="bar"></div><h3>검사에 근거한 결정</h3><p>CT, 내시경, 청력·전정 검사, 수면다원검사로 먼저 수치를 만들고, 그 수치로 수술 여부를 정합니다.</p></div>
+    <div class="rv"><div class="bar"></div><h3>수술 후 관리까지</h3><p>수술한 의사가 세척과 외래를 끝까지 봅니다. 재발을 막는 건 수술 자체보다 그 이후입니다.</p></div>
+  </div>
+</section>
+
+<section id="doctors">
+  <h2 class="rv">의료진</h2>
+  <p class="lead rv">두 명의 이비인후과 전문의가 진료합니다.</p>
+  <div class="docs">
+    <div class="doc rv">
+      <div class="photo">사진</div>
+      <div><h3>박민주 대표원장</h3><div class="role">이비인후과 전문의</div>
+        <ul><li>기존 사이트 약력 이관</li><li>주요 진료: 코·수면</li><li>Jikei 대학 내시경 수술 연수</li></ul></div>
+    </div>
+    <div class="doc rv">
+      <div class="photo">사진</div>
+      <div><h3>○○○ 원장</h3><div class="role">이비인후과 전문의</div>
+        <ul><li>약력 입력 필요</li><li>주요 진료: 귀·어지럼</li><li>—</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="hours" id="hours">
+  <div class="rv">
+    <h2>진료시간</h2>
+    <table>
+      <tr><td>월 · 화 · 수 · 금</td><td>09:00 – 18:30</td></tr>
+      <tr><td>목요일</td><td>확인 필요</td></tr>
+      <tr><td>토요일</td><td>09:00 – 13:00</td></tr>
+      <tr><td>점심시간</td><td>12:30 – 14:00</td></tr>
+      <tr><td>일요일 · 공휴일</td><td>휴진</td></tr>
+    </table>
+  </div>
+  <div class="kbox rv">
+    <h3>예약은 카카오톡으로</h3>
+    <p>채널을 추가하고 이름, 증상, 원하는 날짜를 보내 주세요. 진료 시간 내 순서대로 답합니다. 수술 상담은 같은 채널에서 "수술 상담"이라고 적어 주시면 됩니다.</p>
+    <a class="btn dark" href="https://pf.kakao.com/CHANNEL_ID/chat" target="_blank" rel="noopener">채널 열기</a>
+    <a class="tel" href="tel:053-422-1811">053-422-1811</a>
+  </div>
+</section>
+
+<section class="map" id="map">
+  <div class="box rv"></div>
+  <div class="rv">
+    <h2>오시는 길</h2>
+    <p class="lead">대구 중구 달구벌대로 2127, S타워 4층</p>
+    <dl>
+      <dt>지하철</dt><dd>1·2호선 반월당역 10번 출구</dd>
+      <dt>버스</dt><dd>반월당역: 609, 840, 990, 991, 급행1 · 봉산문화거리앞: 306, 649, 730, 805</dd>
+      <dt>자가용</dt><dd>건물 우측으로 진입해 S타워 주차장 이용, 주차권 수령. 반월당 맞은편 미래에셋 뒤 주차장도 가능</dd>
+    </dl>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div>더원이비인후과의원 반월당점 · 대표자 박민주 · 사업자등록번호 405-94-07871<br>전화 053-422-1811 · 팩스 053-715-2112</div>
+  <div><a href="#">비급여 항목</a> &nbsp; <a href="#">개인정보처리방침</a> &nbsp; <a href="#">수성점</a></div>
+</footer>
+
+<a class="fab" id="fab" href="https://pf.kakao.com/CHANNEL_ID/chat" target="_blank" rel="noopener">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 4C7.6 4 4 6.9 4 10.4c0 2.2 1.4 4.1 3.6 5.2L7 19l3.6-2.3c.5.1.9.1 1.4.1 4.4 0 8-2.9 8-6.4S16.4 4 12 4z"/></svg>
+  예약
+</a>
+
+<script>
+(function(){
+  const rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const E='cubic-bezier(.22,1,.36,1)';
+
+  /* hero: one orchestrated sequence */
+  const paths=[...document.querySelectorAll('.symbols path')];
+  paths.forEach(p=>{const L=p.getTotalLength();p.style.setProperty('--len',L);});
+  if(!rm){
+    let t=200;
+    const draw=(sel,dur)=>{document.querySelectorAll(sel).forEach(p=>{p.animate([{strokeDashoffset:p.getTotalLength()},{strokeDashoffset:0}],{duration:dur,delay:t,easing:E,fill:'forwards'});});};
+    draw('#s1,#s2',900); t+=700;
+    draw('#s3,#s4',900); t+=700;
+    draw('#s5',1100); t+=600;
+    document.querySelectorAll('.symbols .fill').forEach((c,i)=>c.animate([{opacity:0,transform:'scale(.6)'},{opacity:.7,transform:'scale(1)'}],{duration:800,delay:t+i*120,easing:E,fill:'forwards'}));
+    document.querySelectorAll('.symbols text').forEach((x,i)=>x.animate([{opacity:0},{opacity:1}],{duration:500,delay:t+200+i*120,fill:'forwards'}));
+    document.querySelectorAll('.hero h1 .l').forEach((l,i)=>l.animate([{opacity:0,transform:'translateY(14px)'},{opacity:1,transform:'none'}],{duration:800,delay:300+i*140,easing:E,fill:'forwards'}));
+    document.querySelector('.hero p').animate([{opacity:0},{opacity:1}],{duration:700,delay:800,fill:'forwards'});
+    document.querySelector('.hero .cta').animate([{opacity:0},{opacity:1}],{duration:700,delay:1000,fill:'forwards'});
+  }
+
+  /* scroll reveal */
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.18});
+  document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+  /* stagger inside groups */
+  document.querySelectorAll('.axis,.know,.docs,.surg-grid').forEach(g=>[...g.children].forEach((c,i)=>c.style.transitionDelay=(i*80)+'ms'));
+
+  /* active nav + floating kakao */
+  const links=[...document.querySelectorAll('.sb nav a')];
+  const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+  const fab=document.getElementById('fab');
+  addEventListener('scroll',()=>{
+    const y=scrollY+innerHeight*.4;
+    let idx=0;secs.forEach((s,i)=>{if(s&&s.offsetTop<=y)idx=i;});
+    links.forEach((a,i)=>a.classList.toggle('active',i===idx));
+    fab.classList.toggle('show',scrollY>300);
+  },{passive:true});
+})();
+</script>
+</body>
+</html>

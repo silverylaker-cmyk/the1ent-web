@@ -1,0 +1,11 @@
+{
+  "updatedAt": "2026-09-21",
+  "items": [
+    { "category": "검사", "name": "수면다원검사 (PSG)", "price": "플레이스홀더", "note": "1박 입원 검사" },
+    { "category": "검사", "name": "알레르기 검사", "price": "플레이스홀더", "note": "" },
+    { "category": "수술", "name": "축농증 내시경 수술 (ESS)", "price": "플레이스홀더", "note": "실손 청구 가능 여부는 보험사 확인" },
+    { "category": "수술", "name": "내시경 비중격 수술", "price": "플레이스홀더", "note": "" },
+    { "category": "수술", "name": "코골이 수술", "price": "플레이스홀더", "note": "" },
+    { "category": "치료", "name": "양압기 처방·관리", "price": "플레이스홀더", "note": "" }
+  ]
+}
