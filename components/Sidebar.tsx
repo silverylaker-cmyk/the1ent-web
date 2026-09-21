@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { motion } from 'framer-motion';
 import {
   IconHome,
   IconNose,
@@ -10,6 +11,7 @@ import {
   IconClock,
   IconMap,
   IconKakao,
+  IconCheck,
 } from './icons';
 
 const NAV = [
@@ -21,7 +23,8 @@ const NAV = [
     icon: IconSurgery,
     match: (p: string) => p.startsWith('/surgery'),
   },
-  { href: '/doctors', label: '의료진', icon: IconDoctors, match: (p: string) => p.startsWith('/doctors') },
+  { href: '/check', label: '자가체크', icon: IconCheck, match: (p: string) => p.startsWith('/check') },
+  { href: '/doctors', label: '의료진', icon: IconDoctors, desktopOnly: true, match: (p: string) => p.startsWith('/doctors') },
   {
     href: '/reservation',
     label: '예약',
@@ -47,8 +50,15 @@ export default function Sidebar({
         <span>{siteName}</span>
       </Link>
       <nav>
-        {NAV.map(({ href, label, icon: Icon, match }) => (
-          <Link key={href} href={href} className={match(pathname) ? 'active' : ''}>
+        {NAV.map(({ href, label, icon: Icon, match, ...rest }) => (
+          <Link
+            key={href}
+            href={href}
+            className={match(pathname) ? 'active' : ''}
+            aria-current={match(pathname) ? 'page' : undefined}
+            data-desktop-only={'desktopOnly' in rest || undefined}
+          >
+            {match(pathname) && <motion.i className="nav-pill" layoutId="nav-pill" transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }} />}
             <Icon />
             <span>{label}</span>
           </Link>

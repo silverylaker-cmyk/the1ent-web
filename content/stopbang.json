@@ -1,0 +1,26 @@
+{
+  "title": "수면무호흡 위험도 체크",
+  "lead": "국제적으로 널리 쓰이는 STOP-BANG 설문 8문항입니다. '예'의 개수로 폐쇄성 수면무호흡의 위험도를 가늠합니다.",
+  "disclaimer": "이 설문은 선별 도구이며 진단이 아닙니다. 수면무호흡의 진단은 수면다원검사로 합니다.",
+  "source": "Chung F, et al. STOP Questionnaire: a tool to screen patients for obstructive sleep apnea. Anesthesiology 2008.",
+  "yes": "예", "no": "아니오",
+  "questions": [
+    { "id": "S", "title": "코골이", "text": "문을 닫아도 들릴 만큼, 또는 옆 사람이 깰 만큼 크게 코를 고나요?" },
+    { "id": "T", "title": "피로", "text": "낮 동안 자주 피곤하거나 졸린가요?" },
+    { "id": "O", "title": "무호흡 관찰", "text": "자는 동안 숨이 멈추는 것을 누군가 본 적이 있나요?" },
+    { "id": "P", "title": "혈압", "text": "고혈압이 있거나 고혈압 치료를 받고 있나요?" },
+    { "id": "B", "title": "체질량지수", "text": "체질량지수(BMI)가 35를 넘나요?", "bmi": true },
+    { "id": "A", "title": "나이", "text": "나이가 50세를 넘었나요?" },
+    { "id": "N", "title": "목둘레", "text": "목둘레가 40cm(셔츠 목 16인치)를 넘나요?" },
+    { "id": "G", "title": "성별", "text": "남성인가요?" }
+  ],
+  "bmi": { "toggle": "BMI 계산하기", "height": "키 (cm)", "weight": "몸무게 (kg)", "result": "BMI" },
+  "progress": "문항",
+  "prev": "이전",
+  "levels": [
+    { "max": 2, "key": "low", "label": "낮은 위험", "body": "현재 응답으로는 위험도가 낮은 편입니다. 코골이나 낮 졸림이 계속되면 진료 때 말씀해 주세요." },
+    { "max": 4, "key": "mid", "label": "중간 위험", "body": "수면무호흡 가능성을 확인해 볼 만합니다. 진료에서 수면다원검사가 필요한지 상의해 보세요." },
+    { "max": 8, "key": "high", "label": "높은 위험", "body": "수면무호흡 가능성이 높은 편입니다. 수면다원검사로 정확한 상태를 확인하는 것을 권합니다." }
+  ],
+  "result": { "title": "결과", "score": "점", "of": "8점 중", "psg": "수면다원검사 안내 보기", "care": "수면 진료 안내 보기", "reserve": "예약 메시지 만들기", "reset": "다시 하기" }
+}

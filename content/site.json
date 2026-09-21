@@ -14,12 +14,62 @@
   },
   "kakaoChannelUrl": "https://pf.kakao.com/CHANNEL_ID/chat",
   "hours": [
-    { "label": "월 · 화 · 수 · 금", "time": "09:00 – 18:30" },
-    { "label": "목요일", "time": "확인 필요" },
-    { "label": "토요일", "time": "09:00 – 13:00" },
-    { "label": "점심시간", "time": "12:30 – 14:00" },
-    { "label": "일요일 · 공휴일", "time": "휴진" }
+    {
+      "label": "월 · 화 · 수 · 금",
+      "time": "09:00 – 18:30"
+    },
+    {
+      "label": "목요일",
+      "time": "확인 필요"
+    },
+    {
+      "label": "토요일",
+      "time": "09:00 – 13:00"
+    },
+    {
+      "label": "점심시간",
+      "time": "12:30 – 14:00"
+    },
+    {
+      "label": "일요일 · 공휴일",
+      "time": "휴진"
+    }
   ],
   "notice": "추석 연휴 진료 안내는 예약 채널에서 확인하실 수 있습니다.",
-  "sisterClinic": { "name": "수성점", "url": "#" }
+  "sisterClinic": {
+    "name": "수성점",
+    "url": "#"
+  },
+  "schedule": {
+    "mon": [
+      "09:00",
+      "18:30"
+    ],
+    "tue": [
+      "09:00",
+      "18:30"
+    ],
+    "wed": [
+      "09:00",
+      "18:30"
+    ],
+    "thu": null,
+    "fri": [
+      "09:00",
+      "18:30"
+    ],
+    "sat": [
+      "09:00",
+      "13:00"
+    ],
+    "sun": "closed",
+    "lunch": [
+      "12:30",
+      "14:00"
+    ]
+  },
+  "mapLinks": {
+    "kakao": "https://map.kakao.com/link/search/대구 중구 달구벌대로 2127",
+    "naver": "https://map.naver.com/p/search/대구 중구 달구벌대로 2127"
+  }
 }

@@ -1,5 +1,7 @@
 export type MarkdownSection = { heading: string; body: string };
 
+export const sectionId = (i: number) => `sec-${i + 1}`;
+
 export function splitSections(markdown: string): MarkdownSection[] {
   const lines = markdown.split('\n');
   const sections: MarkdownSection[] = [];

@@ -2,11 +2,32 @@ import Link from 'next/link';
 import Hero from '@/components/Hero';
 import Reveal from '@/components/Reveal';
 import SurgerySteps from '@/components/SurgerySteps';
-import { IconNose, IconEar, IconSleep } from '@/components/icons';
-import { getCareContent, getAllSurgeryContent, getDoctors, getSiteConfig } from '@/lib/content';
+import SplitText from '@/components/motion/SplitText';
+import Tilt from '@/components/motion/Tilt';
+import CountUp from '@/components/motion/CountUp';
+import Marquee from '@/components/motion/Marquee';
+import Magnetic from '@/components/motion/Magnetic';
+import Journey from '@/components/home/Journey';
+import ParallaxBand from '@/components/home/ParallaxBand';
+import HoursTable from '@/components/features/HoursTable';
+import MapBox from '@/components/features/MapBox';
+import { IconNose, IconEar, IconSleep, IconArrow } from '@/components/icons';
+import { withBase } from '@/lib/base';
+import {
+  getCareContent,
+  getAllSurgeryContent,
+  getDoctors,
+  getSiteConfig,
+  getHomeContent,
+  getMedia,
+  getUi,
+} from '@/lib/content';
 
 export default function HomePage() {
   const site = getSiteConfig();
+  const home = getHomeContent();
+  const ui = getUi();
+  const media = getMedia();
   const care = [getCareContent('nose'), getCareContent('ear'), getCareContent('sleep')];
   const careIcons = { nose: IconNose, ear: IconEar, sleep: IconSleep } as const;
   const surgeries = getAllSurgeryContent();
@@ -15,31 +36,61 @@ export default function HomePage() {
   return (
     <>
       <Hero
-        headline={['코, 귀, 그리고 잠.', '한 곳에서 끝까지 봅니다.']}
-        lead="반월당역 10번 출구. 앉은 자세로 시행하는 Jikei 방식 내시경 코 수술부터 이명·어지럼, 코골이·수면다원검사까지 두 명의 전문의가 진단과 수술, 수술 후 관리를 이어서 맡습니다."
+        content={home.hero}
         kakaoUrl={site.kakaoChannelUrl}
+        media={{
+          poster: withBase(media.hero.poster),
+          video: media.hero.video ? withBase(media.hero.video) : null,
+        }}
+        schedule={site.schedule}
+        statusLabels={ui.status}
       />
 
+      <Marquee items={home.marquee} />
+
+      <section className="facts" aria-label="한눈에 보기">
+        {home.facts.map((f: { value: number; suffix: string; label: string }, i: number) => (
+          <Reveal as="div" className="fact" index={i} key={f.label}>
+            <div className="fact-num">
+              <CountUp value={f.value} />
+              <small>{f.suffix}</small>
+            </div>
+            <p>{f.label}</p>
+          </Reveal>
+        ))}
+      </section>
+
       <section id="care">
-        <Reveal as="h2">세 가지 진료 축</Reveal>
+        <SplitText text={home.care.title} />
         <Reveal as="p" className="lead" index={1}>
-          이비인후과 전체를 나열하지 않습니다. 반월당점이 가장 많이 보고, 가장 깊게 보는 세 영역입니다.
+          {home.care.lead}
         </Reveal>
         <div className="axis">
           {care.map((c, i) => {
             const Icon = careIcons[c.slug as keyof typeof careIcons];
+            const art = media.care[c.slug as keyof typeof media.care];
             return (
               <Reveal as="div" index={i} key={c.slug}>
-                <Link href={`/care/${c.slug}`} className={c.color}>
-                  <Icon />
-                  <h3>{c.title}</h3>
-                  <p>{c.lead}</p>
-                  <ul>
-                    {c.tags.map((tag) => (
-                      <li key={tag}>{tag}</li>
-                    ))}
-                  </ul>
-                </Link>
+                <Tilt>
+                  <Link href={`/care/${c.slug}`} className={c.color}>
+                    {art && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img className="axis-art" src={withBase(art)} alt="" loading="lazy" />
+                    )}
+                    <Icon />
+                    <h3>{c.title}</h3>
+                    <p>{c.lead}</p>
+                    <ul>
+                      {c.tags.map((tag) => (
+                        <li key={tag}>{tag}</li>
+                      ))}
+                    </ul>
+                    <span className="axis-more">
+                      {home.care.more}
+                      <IconArrow />
+                    </span>
+                  </Link>
+                </Tilt>
               </Reveal>
             );
           })}
@@ -47,56 +98,87 @@ export default function HomePage() {
       </section>
 
       <section className="surg" id="surgery">
-        <Reveal as="h2">수술과 검사, 결정 전에 미리 봅니다</Reveal>
+        <SplitText text={home.surgery.title} />
         <Reveal as="p" className="lead" index={1}>
-          수술을 권유받은 분이 집에서 먼저 읽고 오시도록 만든 페이지입니다. 각 항목은 진단에서 회복까지 세 단계로 설명합니다.
+          {home.surgery.lead}
         </Reveal>
         <div className="surg-grid">
           {surgeries.map((s, i) => (
-            <Reveal as="div" className="surg-item" index={i} key={s.slug}>
+            <Reveal as="div" className={`surg-item ${s.color}`} index={i} key={s.slug}>
+              <span className="surg-no" aria-hidden>
+                {String(i + 1).padStart(2, '0')}
+              </span>
               <h3>{s.title}</h3>
               <p className="sub">{s.sub}</p>
               <SurgerySteps steps={s.steps} color={s.color} />
               <Link className="more" href={`/surgery/${s.slug}`}>
-                설명 영상과 동의 안내 보기
+                {home.surgery.more}
+                <IconArrow />
               </Link>
             </Reveal>
           ))}
         </div>
       </section>
 
-      <section>
-        <Reveal as="h2">더원이 다르게 하는 세 가지</Reveal>
+      <section className="journey-wrap">
+        <div className="journey-head">
+          <SplitText text={home.journey.title} />
+          <Reveal as="p" className="lead" index={1}>
+            {home.journey.lead}
+          </Reveal>
+        </div>
+        <Journey steps={home.journey.steps} />
+      </section>
+
+      <ParallaxBand
+        image={withBase(media.band.image)}
+        video={media.band.video ? withBase(media.band.video) : null}
+      >
+        <SplitText text={home.know.title} />
         <div className="know">
-          <Reveal as="div" index={0}>
-            <div className="bar" />
-            <h3>Jikei 대학 시술법</h3>
-            <p>내시경 코 수술의 시초가 된 방식입니다. 환자가 앉은 상태로 진행해 출혈이 적고 회복이 빠릅니다.</p>
-          </Reveal>
-          <Reveal as="div" index={1}>
-            <div className="bar" />
-            <h3>검사에 근거한 결정</h3>
-            <p>CT, 내시경, 청력·전정 검사, 수면다원검사로 먼저 수치를 만들고, 그 수치로 수술 여부를 정합니다.</p>
-          </Reveal>
-          <Reveal as="div" index={2}>
-            <div className="bar" />
-            <h3>수술 후 관리까지</h3>
-            <p>수술한 의사가 세척과 외래를 끝까지 봅니다. 재발을 막는 건 수술 자체보다 그 이후입니다.</p>
-          </Reveal>
+          {home.know.items.map((k: { title: string; body: string }, i: number) => (
+            <Reveal as="div" index={i} key={k.title}>
+              <div className="bar" />
+              <h3>{k.title}</h3>
+              <p>{k.body}</p>
+            </Reveal>
+          ))}
+        </div>
+      </ParallaxBand>
+
+      <section id="tools">
+        <SplitText text={home.tools.title} />
+        <Reveal as="p" className="lead" index={1}>
+          {home.tools.lead}
+        </Reveal>
+        <div className="tools">
+          {home.tools.items.map((t: { href: string; title: string; body: string; color: string }, i: number) => (
+            <Reveal as="div" index={i} key={t.href}>
+              <Link href={t.href} className={`tool ${t.color}`}>
+                <h3>{t.title}</h3>
+                <p>{t.body}</p>
+                <span className="tool-go" aria-hidden>
+                  <IconArrow />
+                </span>
+              </Link>
+            </Reveal>
+          ))}
         </div>
       </section>
 
       <section id="doctors">
-        <Reveal as="h2">의료진</Reveal>
+        <SplitText text={home.doctors.title} />
         <Reveal as="p" className="lead" index={1}>
-          두 명의 이비인후과 전문의가 진료합니다.
+          {home.doctors.lead}
         </Reveal>
         <div className="docs">
           {doctors.map((doc, i) => (
             <Reveal as="div" className="doc" index={i} key={doc.name}>
-              <div className="photo">사진</div>
+              <div className="photo">{home.doctors.photoLabel}</div>
               <div>
-                <h3>{doc.name} {i === 0 ? '대표원장' : '원장'}</h3>
+                <h3>
+                  {doc.name} {i === 0 ? '대표원장' : '원장'}
+                </h3>
                 <div className="role">{doc.role}</div>
                 <ul>
                   {doc.career.map((c) => (
@@ -111,24 +193,22 @@ export default function HomePage() {
 
       <section className="hours" id="hours">
         <Reveal as="div">
-          <h2>진료시간</h2>
-          <table>
-            <tbody>
-              {site.hours.map((h) => (
-                <tr key={h.label}>
-                  <td>{h.label}</td>
-                  <td>{h.time}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <h2>{home.hours.title}</h2>
+          <HoursTable site={site} ui={ui} />
         </Reveal>
         <Reveal as="div" className="kbox" index={1}>
-          <h3>예약은 카카오톡으로</h3>
-          <p>채널을 추가하고 이름, 증상, 원하는 날짜를 보내 주세요. 진료 시간 내 순서대로 답합니다. 수술 상담은 같은 채널에서 &quot;수술 상담&quot;이라고 적어 주시면 됩니다.</p>
-          <a className="btn dark" href={site.kakaoChannelUrl} target="_blank" rel="noopener">
-            채널 열기
-          </a>
+          <h3>{home.hours.kakaoTitle}</h3>
+          <p>{home.hours.kakaoBody}</p>
+          <div className="kbox-cta">
+            <Magnetic>
+              <a className="btn dark shine" href={site.kakaoChannelUrl} target="_blank" rel="noopener">
+                {home.hours.kakaoCta}
+              </a>
+            </Magnetic>
+            <Link className="btn ghost" href="/reservation#helper">
+              {home.hours.helperCta}
+            </Link>
+          </div>
           <a className="tel" href={site.telHref}>
             {site.tel}
           </a>
@@ -136,11 +216,11 @@ export default function HomePage() {
       </section>
 
       <section className="map" id="map">
-        <Reveal as="div" className="box">
-          <div className="placeholder">지도 임베드 자리 (카카오맵)</div>
+        <Reveal as="div">
+          <MapBox site={site} ui={ui} placeholder={home.map.placeholder} />
         </Reveal>
         <Reveal as="div" index={1}>
-          <h2>오시는 길</h2>
+          <h2>{home.map.title}</h2>
           <p className="lead">{site.address}</p>
           <dl>
             <dt>지하철</dt>

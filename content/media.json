@@ -1,0 +1,5 @@
+{
+  "hero": { "poster": "/media/hero.jpg", "video": null },
+  "band": { "image": "/media/ribbon.jpg", "video": null },
+  "care": { "nose": null, "ear": null, "sleep": null }
+}

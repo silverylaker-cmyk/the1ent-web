@@ -11,6 +11,8 @@ export default function Footer({ site }: { site: SiteConfig }) {
       </div>
       <div>
         <Link href="/fees">비급여 항목</Link> &nbsp;
+        <Link href="/faq">자주 묻는 질문</Link> &nbsp;
+        <Link href="/notice">공지</Link> &nbsp;
         <a href="#">개인정보처리방침</a> &nbsp;
         <a href={site.sisterClinic.url}>{site.sisterClinic.name}</a>
       </div>
